@@ -1,9 +1,18 @@
+/* =========================================================
+   ROOM 17 — STYLE.CSS
+   Version 2.1 — MOBILE CONTROLS FIX
+========================================================= */
+
+
+/* ================= GLOBAL ================= */
+
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
 }
 
-html,body{
+html,
+body{
   margin:0;
   width:100%;
   height:100%;
@@ -13,6 +22,11 @@ html,body{
   font-family:Arial,sans-serif;
 }
 
+body{
+  position:fixed;
+  inset:0;
+}
+
 button{
   font:inherit;
   color:inherit;
@@ -20,153 +34,293 @@ button{
   border:0;
   cursor:pointer;
   user-select:none;
+  -webkit-user-select:none;
 }
 
+
+/* ================= APP ================= */
+
 #app{
+  position:fixed;
+  inset:0;
+
   width:100vw;
   height:100vh;
-  position:relative;
+
   overflow:hidden;
+
   background:#050609;
 }
+
+
+/* ================= SCREENS ================= */
 
 .screen{
   position:absolute;
   inset:0;
+
   display:none;
+
+  width:100%;
+  height:100%;
+
+  overflow:hidden;
 }
 
 .screen.active{
   display:block;
 }
 
-/* MENU */
+
+/* =========================================================
+   MENU
+========================================================= */
 
 #menu{
   background:
-  radial-gradient(
-    circle at 50% 35%,
-    #20283a 0,
-    #101520 25%,
-    #07090e 62%,
-    #030407 100%
-  );
+    radial-gradient(
+      circle at 50% 35%,
+      #20283a 0,
+      #101520 25%,
+      #07090e 62%,
+      #030407 100%
+    );
 }
 
 .stars{
   position:absolute;
   inset:0;
+
   background-image:
-    radial-gradient(circle,#fff 1px,transparent 1px),
-    radial-gradient(circle,#9aa8bd 1px,transparent 1px);
-  background-size:97px 91px,143px 137px;
-  background-position:10px 20px,50px 70px;
+    radial-gradient(
+      circle,
+      #fff 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle,
+      #9aa8bd 1px,
+      transparent 1px
+    );
+
+  background-size:
+    97px 91px,
+    143px 137px;
+
+  background-position:
+    10px 20px,
+    50px 70px;
+
   opacity:.18;
-  animation:drift 18s linear infinite;
+
+  animation:
+    drift 18s linear infinite;
+
   pointer-events:none;
 }
 
 @keyframes drift{
+
   to{
-    background-position:107px 120px,0 0;
+
+    background-position:
+      107px 120px,
+      0 0;
+
   }
+
 }
+
+
+/* ================= LOGO ================= */
 
 .logo{
   position:absolute;
+
   top:13%;
+
   width:100%;
+
   text-align:center;
+
   letter-spacing:10px;
-  font-size:clamp(35px,8vw,78px);
+
+  font-size:
+    clamp(
+      35px,
+      8vw,
+      78px
+    );
+
   color:#e5e8ee;
-  text-shadow:0 0 30px #7588a0;
+
+  text-shadow:
+    0 0 30px #7588a0;
 }
 
 .subtitle{
   position:absolute;
+
   top:26%;
+
   width:100%;
+
   text-align:center;
+
   color:#777;
+
   letter-spacing:4px;
 }
 
+
+/* ================= MENU BUTTONS ================= */
+
 .menuButtons{
   position:absolute;
+
   top:39%;
   left:50%;
-  transform:translateX(-50%);
-  width:min(430px,80%);
+
+  transform:
+    translateX(-50%);
+
+  width:
+    min(
+      430px,
+      80%
+    );
 }
 
 .menuButtons button,
 .panelBtn{
+
   width:100%;
+
   margin:7px 0;
+
   padding:14px;
+
   border:1px solid #39404b;
-  background:rgba(10,12,18,.8);
+
+  background:
+    rgba(
+      10,
+      12,
+      18,
+      .8
+    );
+
   border-radius:5px;
+
   color:#c9cdd4;
+
   transition:.15s;
 }
 
 .menuButtons button:hover,
 .panelBtn:hover{
+
   background:#202632;
+
   border-color:#7c8799;
+
 }
 
 .menuButtons button:active,
 .panelBtn:active{
-  transform:scale(.98);
+
+  transform:
+    scale(.98);
+
   background:#2a313c;
+
 }
+
+
+/* ================= VERSION ================= */
 
 .version{
   position:absolute;
+
   bottom:15px;
   left:20px;
+
   color:#444;
+
   font-size:11px;
 }
 
-/* PANELS */
+
+/* =========================================================
+   PANELS
+========================================================= */
 
 .panel{
   position:absolute;
+
   inset:7%;
-  background:rgba(7,9,14,.97);
+
+  background:
+    rgba(
+      7,
+      9,
+      14,
+      .97
+    );
+
   border:1px solid #303743;
+
   border-radius:8px;
+
   padding:25px;
+
   overflow:auto;
-  box-shadow:0 0 60px #000;
+
+  box-shadow:
+    0 0 60px #000;
+
+  z-index:10;
 }
 
 .panel h2{
+
   text-align:center;
+
   margin-top:0;
+
   font-weight:normal;
+
   letter-spacing:3px;
+
 }
 
 .close{
+
   position:absolute;
+
   top:12px;
   left:15px;
+
   color:#777;
+
   font-size:25px;
+
   padding:5px 10px;
+
 }
 
 .storyText{
+
   max-width:750px;
+
   margin:30px auto;
+
   line-height:2;
+
   font-size:17px;
+
   color:#b7bbc3;
+
 }
 
 .storyText p{
@@ -174,63 +328,112 @@ button{
 }
 
 .warning{
+
   text-align:center;
+
   color:#819b9a;
+
 }
 
 .statbar{
+
   display:flex;
+
   justify-content:center;
+
   gap:30px;
+
   color:#aaa;
+
   margin:15px;
+
 }
 
-/* GAME */
+
+/* =========================================================
+   GAME
+========================================================= */
 
 #game{
+
   background:#030508;
+
+  width:100%;
+  height:100%;
+
+  overflow:hidden;
+
 }
 
 #world{
+
   position:absolute;
+
   inset:0;
+
+  width:100%;
+  height:100%;
+
   background:
     linear-gradient(
       #070b12 0 63%,
       #11151a 63% 100%
     );
+
   overflow:hidden;
+
 }
 
 #roomGlow{
+
   position:absolute;
+
   inset:0;
+
   background:
     radial-gradient(
       circle at 50% 45%,
-      rgba(95,110,135,.13),
+      rgba(
+        95,
+        110,
+        135,
+        .13
+      ),
       transparent 48%
     );
+
   pointer-events:none;
+
 }
 
 .wallLine{
+
   position:absolute;
+
   left:0;
   right:0;
+
   top:63%;
+
   height:2px;
+
   background:#2d333b;
+
 }
 
 .floorGrid{
+
   position:absolute;
+
   left:0;
   right:0;
+
   bottom:0;
+
   height:37%;
+
   opacity:.18;
+
   background-image:
     linear-gradient(
       90deg,
@@ -241,25 +444,44 @@ button{
       #69717b 1px,
       transparent 1px
     );
-  background-size:70px 45px;
+
+  background-size:
+    70px 45px;
+
   transform:
     perspective(350px)
     rotateX(50deg);
+
   transform-origin:bottom;
+
 }
 
-/* OBJECTS */
+
+/* =========================================================
+   OBJECTS
+========================================================= */
 
 .object{
+
   position:absolute;
+
   touch-action:manipulation;
+
 }
 
+
+/* ================= DOOR ================= */
+
 #door{
+
   left:5%;
+
   bottom:37%;
+
   width:14%;
+
   height:32%;
+
   background:
     linear-gradient(
       90deg,
@@ -267,154 +489,304 @@ button{
       #272c32,
       #111318
     );
+
   border:4px solid #363b43;
-  box-shadow:inset 0 0 25px #000;
+
+  box-shadow:
+    inset 0 0 25px #000;
+
 }
 
 #door:after{
+
   content:"17";
+
   position:absolute;
+
   inset:40% 0;
+
   text-align:center;
+
   color:#555;
+
   font-size:20px;
+
 }
 
+
+/* ================= TERMINAL ================= */
+
 #terminal{
+
   right:8%;
+
   top:30%;
+
   width:23%;
+
   height:21%;
+
   background:#071012;
+
   border:5px solid #252c31;
-  box-shadow:0 0 30px #000;
+
+  box-shadow:
+    0 0 30px #000;
+
 }
 
 #terminalText{
+
   padding:12px;
+
   color:#69a7a4;
+
   font:12px monospace;
+
 }
 
+
+/* ================= CRATE ================= */
+
 #crate{
+
   left:42%;
+
   bottom:37%;
+
   width:13%;
+
   height:12%;
+
   background:
     linear-gradient(
       135deg,
       #49392c,
       #211a15
     );
+
   border:3px solid #5a4737;
-  box-shadow:0 10px 20px #000;
+
+  box-shadow:
+    0 10px 20px #000;
+
 }
 
 #crate:after{
+
   content:"17";
+
   position:absolute;
+
   inset:35% 0;
+
   text-align:center;
+
   color:#806b58;
+
 }
 
+
+/* ================= GENERATOR ================= */
+
 #generator{
+
   right:40%;
+
   bottom:37%;
+
   width:11%;
+
   height:18%;
+
   background:#252a2d;
+
   border:3px solid #40474c;
+
 }
 
 #generator:after{
+
   content:"⚡";
+
   position:absolute;
+
   inset:35% 0;
+
   text-align:center;
+
   color:#777;
+
 }
 
+
+/* ================= LAMP ================= */
+
 #lamp{
+
   position:absolute;
+
   top:14%;
+
   left:50%;
+
   width:10px;
+
   height:20px;
+
   background:#555;
+
 }
 
 #lamp:after{
+
   content:"";
+
   position:absolute;
+
   width:110px;
+
   height:110px;
+
   left:-50px;
+
   top:10px;
+
   border-radius:50%;
-  background:rgba(180,185,150,.06);
+
+  background:
+    rgba(
+      180,
+      185,
+      150,
+      .06
+    );
+
   box-shadow:
-    0 0 45px rgba(180,185,150,.12);
+    0 0 45px
+    rgba(
+      180,
+      185,
+      150,
+      .12
+    );
+
 }
 
-/* PLAYER */
+
+/* =========================================================
+   PLAYER
+========================================================= */
 
 #player{
+
   position:absolute;
+
   left:34%;
+
   bottom:37%;
+
   width:28px;
+
   height:58px;
+
   background:#b8bcc2;
-  border-radius:6px 6px 3px 3px;
-  box-shadow:0 5px 12px #000;
+
+  border-radius:
+    6px 6px 3px 3px;
+
+  box-shadow:
+    0 5px 12px #000;
+
   z-index:10;
-  transition:left .12s linear;
+
+  transition:
+    left .12s linear;
+
 }
 
 #player:before{
+
   content:"";
+
   position:absolute;
+
   left:4px;
+
   top:-17px;
+
   width:20px;
+
   height:20px;
+
   background:#aeb3ba;
+
   border-radius:50%;
+
 }
 
 #player:after{
+
   content:"";
+
   position:absolute;
+
   left:5px;
+
   top:5px;
+
   width:18px;
+
   height:14px;
+
   background:#263442;
+
   border-radius:3px;
+
 }
 
-/* HUD */
+
+/* =========================================================
+   HUD
+========================================================= */
 
 #hud{
+
   position:absolute;
+
   top:0;
   left:0;
   right:0;
+
   height:58px;
+
   background:
-    linear-gradient(#05070b,transparent);
+    linear-gradient(
+      #05070b,
+      transparent
+    );
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
-  padding:0 14px;
-  z-index:20;
+
+  padding:
+    0 14px;
+
+  z-index:100;
+
+  pointer-events:none;
+
 }
 
 .hudItem{
+
   font-size:13px;
+
   color:#aaa;
+
 }
 
 .hudItem b{
@@ -422,259 +794,660 @@ button{
 }
 
 #pauseBtn{
+
   border:1px solid #333;
-  padding:6px 11px;
+
+  padding:
+    6px 11px;
+
   border-radius:4px;
+
   color:#aaa;
+
+  pointer-events:auto;
+
 }
 
-/* CONTROLS */
+
+/* =========================================================
+   CONTROLS
+========================================================= */
 
 #controls{
-  position:absolute;
-  bottom:18px;
-  left:18px;
-  right:18px;
-  z-index:30;
+
+  position:fixed;
+
+  left:12px;
+
+  bottom:12px;
+
+  width:auto;
+  height:auto;
+
   display:flex;
+
+  flex-direction:row;
+
+  align-items:center;
+
   justify-content:flex-start;
-  pointer-events:none;
+
+  gap:8px;
+
+  z-index:300;
+
+  pointer-events:auto;
+
+  padding:0;
+
+  margin:0;
+
 }
 
 .ctrl{
+
+  position:relative;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  flex:none;
+
   width:58px;
-  height:50px;
-  margin-right:8px;
+
+  height:52px;
+
+  margin:0;
+
+  padding:0;
+
   border:1px solid #3d4249;
-  background:rgba(10,12,16,.8);
+
+  background:
+    rgba(
+      10,
+      12,
+      16,
+      .92
+    );
+
   border-radius:7px;
+
   color:#aaa;
+
   font-size:20px;
+
   touch-action:manipulation;
+
+  pointer-events:auto;
+
+  -webkit-user-select:none;
+
+  user-select:none;
+
 }
 
 .ctrl:active{
+
   background:#333;
+
+  transform:
+    scale(.96);
+
 }
 
+
+/* ================= INTERACT ================= */
+
 #interactBtn{
-  position:absolute;
-  bottom:80px;
-  right:25px;
-  z-index:31;
-  padding:13px 22px;
+
+  position:fixed;
+
+  right:12px;
+
+  bottom:12px;
+
+  z-index:301;
+
+  padding:
+    14px 18px;
+
   border:1px solid #59616d;
-  background:rgba(12,15,20,.9);
+
+  background:
+    rgba(
+      12,
+      15,
+      20,
+      .95
+    );
+
   border-radius:6px;
+
   touch-action:manipulation;
+
+  pointer-events:auto;
+
+  white-space:nowrap;
+
 }
 
 #interactBtn:active{
+
   background:#333;
+
+  transform:
+    scale(.96);
+
 }
 
-/* DIALOG */
+
+/* =========================================================
+   DIALOG
+========================================================= */
 
 #dialogOverlay{
-  position:absolute;
+
+  position:fixed;
+
   inset:0;
-  background:rgba(0,0,0,.58);
-  z-index:50;
+
+  width:100%;
+  height:100%;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      .58
+    );
+
+  z-index:500;
+
   display:none;
+
 }
 
 #dialogBox{
+
   position:absolute;
+
   bottom:5%;
+
   left:5%;
   right:5%;
+
   background:#090c11;
+
   border:1px solid #414852;
+
   border-radius:8px;
+
   padding:18px;
+
 }
 
 #speaker{
+
   color:#8294aa;
+
   margin-bottom:10px;
+
   letter-spacing:2px;
+
 }
 
 #dialogText{
+
   font-size:17px;
+
   line-height:1.8;
+
   min-height:55px;
+
 }
 
 .dialogChoices{
+
   display:flex;
+
   flex-wrap:wrap;
+
   gap:8px;
+
   margin-top:15px;
+
 }
 
 .dialogChoices button{
+
   flex:1;
+
   min-width:130px;
+
   padding:10px;
+
   border:1px solid #383f48;
+
   border-radius:5px;
+
   background:#14181e;
+
 }
 
 .dialogChoices button:active{
+
   background:#303741;
+
 }
 
-/* SHOP */
+
+/* =========================================================
+   SHOP
+========================================================= */
 
 .cards{
+
   display:grid;
+
   grid-template-columns:
-    repeat(auto-fit,minmax(190px,1fr));
+    repeat(
+      auto-fit,
+      minmax(
+        190px,
+        1fr
+      )
+    );
+
   gap:12px;
+
   max-width:850px;
+
   margin:25px auto;
+
 }
 
 .card{
+
   border:1px solid #343b44;
+
   background:#10141a;
+
   padding:18px;
+
   border-radius:7px;
+
 }
 
 .card h3{
-  margin:0 0 8px;
+
+  margin:
+    0 0 8px;
+
 }
 
 .card p{
+
   color:#888;
+
   font-size:13px;
+
   line-height:1.6;
+
 }
 
 .card button{
+
   width:100%;
+
   padding:9px;
+
   border:1px solid #414954;
+
   border-radius:4px;
+
 }
 
 .card button:active{
+
   background:#303741;
+
 }
 
 .locked{
+
   opacity:.45;
+
 }
 
-/* TOAST */
+
+/* =========================================================
+   TOAST
+========================================================= */
 
 #toast{
-  position:absolute;
+
+  position:fixed;
+
   top:70px;
+
   left:50%;
-  transform:translateX(-50%);
+
+  transform:
+    translateX(-50%);
+
   background:#11151b;
+
   border:1px solid #414953;
-  padding:11px 18px;
+
+  padding:
+    11px 18px;
+
   border-radius:5px;
-  z-index:100;
+
+  z-index:600;
+
   opacity:0;
+
   pointer-events:none;
+
   transition:.3s;
+
   white-space:nowrap;
+
 }
 
 #toast.show{
+
   opacity:1;
+
 }
 
-/* MAP */
+
+/* =========================================================
+   MAP
+========================================================= */
 
 .map{
+
   max-width:650px;
+
   margin:30px auto;
+
   display:grid;
+
   grid-template-columns:
     1fr 1fr 1fr;
+
   gap:10px;
+
 }
 
 .mapRoom{
+
   height:80px;
+
   border:1px solid #3a414a;
+
   background:#11151b;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   text-align:center;
+
   color:#777;
+
   border-radius:5px;
+
 }
 
 .mapRoom.open{
+
   color:#bbb;
+
   border-color:#596474;
+
 }
 
 .mapRoom.current{
+
   border-color:#9ba8b8;
-  box-shadow:0 0 15px #39424f;
+
+  box-shadow:
+    0 0 15px #39424f;
+
 }
 
 .mapRoom.locked{
+
   color:#555;
+
 }
 
-/* MOBILE */
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media(max-width:600px){
 
   .panel{
+
     inset:3%;
+
     padding:18px;
+
   }
+
 
   .logo{
+
     top:12%;
+
     font-size:35px;
+
     letter-spacing:6px;
+
   }
+
 
   .subtitle{
+
     top:22%;
+
     font-size:10px;
+
   }
+
 
   .menuButtons{
+
     top:34%;
+
   }
+
 
   .storyText{
+
     font-size:14px;
+
   }
+
 
   #terminal{
+
     width:29%;
+
     height:24%;
+
   }
+
 
   #door{
+
     width:17%;
+
   }
+
 
   #crate{
+
     width:17%;
+
   }
+
 
   #generator{
+
     width:15%;
+
   }
 
+
   .dialogChoices button{
+
     min-width:100%;
+
+  }
+
+
+  /* MOBILE CONTROLS */
+
+  #controls{
+
+    left:10px;
+
+    bottom:
+      max(
+        10px,
+        env(
+          safe-area-inset-bottom
+        )
+      );
+
+    gap:6px;
+
+  }
+
+
+  .ctrl{
+
+    width:54px;
+
+    height:50px;
+
+    font-size:20px;
+
+  }
+
+
+  #interactBtn{
+
+    right:10px;
+
+    bottom:
+      max(
+        10px,
+        env(
+          safe-area-inset-bottom
+        )
+      );
+
+    padding:
+      13px 16px;
+
+    font-size:14px;
+
   }
 
 }
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media(max-width:380px){
+
+  #controls{
+
+    left:7px;
+
+    gap:4px;
+
+  }
+
+
+  .ctrl{
+
+    width:48px;
+
+    height:46px;
+
+    font-size:18px;
+
+  }
+
+
+  #interactBtn{
+
+    right:7px;
+
+    padding:
+      11px 13px;
+
+    font-size:13px;
+
+  }
+
+}
+
+
+/* =========================================================
+   LANDSCAPE MOBILE
+========================================================= */
+
+@media(
+  max-width:900px
+) and (
+  orientation:landscape
+){
+
+  #controls{
+
+    left:10px;
+
+    bottom:10px;
+
+  }
+
+
+  .ctrl{
+
+    width:52px;
+
+    height:44px;
+
+  }
+
+
+  #interactBtn{
+
+    right:10px;
+
+    bottom:10px;
+
+    padding:
+      10px 15px;
+
+  }
+
+  }
