@@ -1,6 +1,7 @@
 /* =========================================================
    ROOM 17 — GAME.JS
-   Version 3.0 — CLEAN FIX
+   Version 3.0 — STABLE
+   PART 1 / 2
 ========================================================= */
 
 
@@ -23,7 +24,6 @@ const defaultState = {
   chapter: 1,
   sound: true
 };
-
 
 let saved = localStorage.getItem("room17save");
 
@@ -54,7 +54,6 @@ function save() {
   );
 
   updateUI();
-
 }
 
 
@@ -70,10 +69,8 @@ function showScreen(id) {
 
     });
 
-
   const target =
     document.getElementById(id);
-
 
   if (target) {
 
@@ -103,13 +100,11 @@ function openPanel(id) {
 
   }
 
-
   if (id === "inventory") {
 
     renderInventory();
 
   }
-
 
   showScreen(id);
 
@@ -123,12 +118,9 @@ function newGame() {
   state =
     Object.assign({}, defaultState);
 
-
   save();
 
-
   showScreen("game");
-
 
   showDialog(
 
@@ -139,7 +131,6 @@ function newGame() {
     [
 
       {
-
         text: "ابدأ التحقيق",
 
         action: function() {
@@ -177,25 +168,20 @@ function resetGame() {
       "هل تريد حذف تقدم اللعبة بالكامل؟"
     );
 
-
   if (!answer) {
 
     return;
 
   }
 
-
   localStorage.removeItem(
     "room17save"
   );
 
-
   state =
     Object.assign({}, defaultState);
 
-
-  save();
-
+  updateUI();
 
   toast("تم حذف الحفظ");
 
@@ -209,14 +195,11 @@ function updateUI() {
   const coins =
     document.getElementById("coins");
 
-
   const shopCoins =
     document.getElementById("shopCoins");
 
-
   const player =
     document.getElementById("player");
-
 
   if (coins) {
 
@@ -225,14 +208,12 @@ function updateUI() {
 
   }
 
-
   if (shopCoins) {
 
     shopCoins.textContent =
       state.coins;
 
   }
-
 
   if (player) {
 
@@ -242,9 +223,10 @@ function updateUI() {
   }
 
 
+  /* ================= QUEST ================= */
+
   let quest =
     "اكتشف الغرفة";
-
 
   if (!state.terminalRead) {
 
@@ -260,17 +242,17 @@ function updateUI() {
 
   }
 
-  else if (!state.hasKey) {
-
-    quest =
-      "اكتشف طريقة فتح الباب";
-
-  }
-
   else if (!state.generatorFixed) {
 
     quest =
       "أصلح مولد الطاقة";
+
+  }
+
+  else if (!state.doorOpened) {
+
+    quest =
+      "افتح الباب";
 
   }
 
@@ -285,7 +267,6 @@ function updateUI() {
   const questElement =
     document.getElementById("quest");
 
-
   if (questElement) {
 
     questElement.textContent =
@@ -294,16 +275,14 @@ function updateUI() {
   }
 
 
+  /* ================= TERMINAL ================= */
+
   const terminal =
     document.getElementById(
       "terminalText"
     );
 
-
-  if (
-    terminal &&
-    state.terminalRead
-  ) {
+  if (terminal) {
 
     terminal.innerHTML =
       "SYSTEM 17<br><br>" +
@@ -330,11 +309,12 @@ function updateUI() {
   }
 
 
+  /* ================= SOUND ================= */
+
   const soundState =
     document.getElementById(
       "soundState"
     );
-
 
   if (soundState) {
 
@@ -357,25 +337,20 @@ function toast(text) {
       "toast"
     );
 
-
   if (!t) {
 
     return;
 
   }
 
-
   t.textContent =
     text;
 
-
   t.classList.add("show");
-
 
   clearTimeout(
     window.toastTimer
   );
-
 
   window.toastTimer =
     setTimeout(
@@ -399,7 +374,6 @@ function move(dir) {
   const game =
     document.getElementById("game");
 
-
   if (
     !game ||
     !game.classList.contains("active")
@@ -409,10 +383,8 @@ function move(dir) {
 
   }
 
-
   state.playerX +=
     dir * 4;
-
 
   state.playerX =
     Math.max(
@@ -423,12 +395,10 @@ function move(dir) {
       )
     );
 
-
   const player =
     document.getElementById(
       "player"
     );
-
 
   if (player) {
 
@@ -436,7 +406,6 @@ function move(dir) {
       state.playerX + "%";
 
   }
-
 
   if (state.sound) {
 
@@ -470,19 +439,17 @@ function interact() {
 
     }
 
-
     if (!state.hasKey) {
 
       showDialog(
 
         "الباب",
 
-        "الباب محكم الإغلاق. لا توجد لوحة أرقام... فقط منفذ صغير أسفل المقبض.",
+        "الباب محكم الإغلاق. تحتاج إلى بطاقة الوصول الموجودة داخل الصندوق.",
 
         [
 
           {
-
             text: "الابتعاد",
 
             action: function() {
@@ -508,12 +475,11 @@ function interact() {
 
         "الباب",
 
-        "تم التعرف على المفتاح، لكن نظام الطاقة غير مستقر. الباب يحتاج إلى طاقة كاملة.",
+        "تم التعرف على بطاقة الوصول، لكن نظام الطاقة غير مستقر. يجب تشغيل المولد أولًا.",
 
         [
 
           {
-
             text: "حسنًا",
 
             action: function() {
@@ -536,9 +502,7 @@ function interact() {
     state.doorOpened =
       true;
 
-
     save();
-
 
     showDialog(
 
@@ -549,7 +513,6 @@ function interact() {
       [
 
         {
-
           text: "افتح الباب",
 
           action: function() {
@@ -580,9 +543,7 @@ function interact() {
       state.terminalRead =
         true;
 
-
       save();
-
 
       showDialog(
 
@@ -593,7 +554,6 @@ function interact() {
         [
 
           {
-
             text: "فتح الملف",
 
             action: function() {
@@ -607,7 +567,6 @@ function interact() {
                 [
 
                   {
-
                     text: "متابعة",
 
                     action: function() {
@@ -621,7 +580,6 @@ function interact() {
                         [
 
                           {
-
                             text: "إغلاق",
 
                             action: function() {
@@ -670,93 +628,6 @@ function interact() {
       [
 
         {
-
-          text: "إغلاق",
-
-          action: function() {
-
-            closeDialog();
-
-          }
-
-        }
-
-      ]
-
-    );
-
-    return;
-
-  }
-
-
-  /* ================= CRATE ================= */
-
-  if (
-    x >= 35 &&
-    x <= 60
-  ) {
-
-    if (!state.crateOpened) {
-
-      state.crateOpened =
-        true;
-
-
-      state.hasKey =
-        true;
-
-
-      state.coins +=
-        50;
-
-
-      save();
-
-
-      showDialog(
-
-        "الصندوق",
-
-        "وجدت بطاقة وصول معدنية ومجموعة عملات قديمة. البطاقة تحمل الرقم 17.",
-
-        [
-
-          {
-
-            text: "أخذ الأشياء",
-
-            action: function() {
-
-              toast(
-                "حصلت على بطاقة الوصول +50 🪙"
-              );
-
-              closeDialog();
-
-            }
-
-          }
-
-        ]
-
-      );
-
-      return;
-
-    }
-
-
-    showDialog(
-
-      "الصندوق",
-
-      "الصندوق فارغ الآن.",
-
-      [
-
-        {
-
           text: "إغلاق",
 
           action: function() {
@@ -778,10 +649,7 @@ function interact() {
 
   /* ================= GENERATOR ================= */
 
-  if (
-    x >= 48 &&
-    x <= 67
-  ) {
+  if (x >= 60 && x <= 67) {
 
     if (!state.crateOpened) {
 
@@ -789,12 +657,11 @@ function interact() {
 
         "مولد الطاقة",
 
-        "المولد متوقف. ربما توجد أداة أو بطاقة في مكان قريب يمكنها تشغيله.",
+        "المولد متوقف. ابحث أولًا عن بطاقة الوصول داخل الصندوق.",
 
         [
 
           {
-
             text: "إغلاق",
 
             action: function() {
@@ -819,13 +686,10 @@ function interact() {
       state.generatorFixed =
         true;
 
-
       state.coins +=
         100;
 
-
       save();
-
 
       showDialog(
 
@@ -836,7 +700,6 @@ function interact() {
         [
 
           {
-
             text: "ماذا حدث؟",
 
             action: function() {
@@ -850,7 +713,6 @@ function interact() {
                 [
 
                   {
-
                     text: "إغلاق",
 
                     action: function() {
@@ -887,7 +749,83 @@ function interact() {
       [
 
         {
+          text: "إغلاق",
 
+          action: function() {
+
+            closeDialog();
+
+          }
+
+        }
+
+      ]
+
+    );
+
+    return;
+
+  }
+
+
+  /* ================= CRATE ================= */
+
+  if (x >= 35 && x < 60) {
+
+    if (!state.crateOpened) {
+
+      state.crateOpened =
+        true;
+
+      state.hasKey =
+        true;
+
+      state.coins +=
+        50;
+
+      save();
+
+      showDialog(
+
+        "الصندوق",
+
+        "وجدت بطاقة وصول معدنية ومجموعة عملات قديمة. البطاقة تحمل الرقم 17.",
+
+        [
+
+          {
+            text: "أخذ الأشياء",
+
+            action: function() {
+
+              toast(
+                "حصلت على بطاقة الوصول +50 🪙"
+              );
+
+              closeDialog();
+
+            }
+
+          }
+
+        ]
+
+      );
+
+      return;
+
+    }
+
+
+    showDialog(
+
+      "الصندوق",
+
+      "الصندوق فارغ الآن.",
+
+      [
+
+        {
           text: "إغلاق",
 
           action: function() {
@@ -918,7 +856,6 @@ function interact() {
     [
 
       {
-
         text: "إغلاق",
 
         action: function() {
@@ -933,9 +870,7 @@ function interact() {
 
   );
 
-}
-
-
+       }
 /* ================= DIALOG ================= */
 
 function showDialog(
@@ -949,18 +884,15 @@ function showDialog(
       "dialogOverlay"
     );
 
-
   const speakerElement =
     document.getElementById(
       "speaker"
     );
 
-
   const textElement =
     document.getElementById(
       "dialogText"
     );
-
 
   const choicesElement =
     document.getElementById(
@@ -983,10 +915,8 @@ function showDialog(
   speakerElement.textContent =
     speaker;
 
-
   textElement.textContent =
     text;
-
 
   choicesElement.innerHTML =
     "";
@@ -998,19 +928,13 @@ function showDialog(
   ) {
 
     choices = [
-
       {
-
         text: "إغلاق",
 
         action: function() {
-
           closeDialog();
-
         }
-
       }
-
     ];
 
   }
@@ -1024,14 +948,11 @@ function showDialog(
           "button"
         );
 
-
       button.type =
         "button";
 
-
       button.textContent =
         choice.text;
-
 
       button.addEventListener(
         "click",
@@ -1049,7 +970,6 @@ function showDialog(
         }
       );
 
-
       choicesElement.appendChild(
         button
       );
@@ -1064,13 +984,14 @@ function showDialog(
 }
 
 
+/* ================= CLOSE DIALOG ================= */
+
 function closeDialog() {
 
   const overlay =
     document.getElementById(
       "dialogOverlay"
     );
-
 
   if (overlay) {
 
@@ -1129,7 +1050,6 @@ function renderShop() {
       "shopCards"
     );
 
-
   if (!container) {
 
     return;
@@ -1149,7 +1069,6 @@ function renderShop() {
           "div"
         );
 
-
       card.className =
         "card";
 
@@ -1158,7 +1077,6 @@ function renderShop() {
         document.createElement(
           "h3"
         );
-
 
       title.textContent =
         item.name;
@@ -1169,7 +1087,6 @@ function renderShop() {
           "p"
         );
 
-
       description.textContent =
         item.description;
 
@@ -1178,7 +1095,6 @@ function renderShop() {
         document.createElement(
           "button"
         );
-
 
       button.type =
         "button";
@@ -1190,15 +1106,10 @@ function renderShop() {
         item.id.slice(1);
 
 
-      const owned =
-        state[key];
-
-
-      if (owned) {
+      if (state[key]) {
 
         button.textContent =
           "تم الشراء ✓";
-
 
         button.disabled =
           true;
@@ -1229,11 +1140,9 @@ function renderShop() {
         title
       );
 
-
       card.appendChild(
         description
       );
-
 
       card.appendChild(
         button
@@ -1249,6 +1158,8 @@ function renderShop() {
 
 }
 
+
+/* ================= BUY ITEM ================= */
 
 function buyItem(item) {
 
@@ -1283,16 +1194,12 @@ function buyItem(item) {
   state.coins -=
     item.price;
 
-
   state[key] =
     true;
 
-
   save();
 
-
   renderShop();
-
 
   toast(
     "تم شراء " +
@@ -1300,6 +1207,8 @@ function buyItem(item) {
   );
 
 }
+
+
 /* ================= INVENTORY ================= */
 
 function renderInventory() {
@@ -1308,7 +1217,6 @@ function renderInventory() {
     document.getElementById(
       "inventoryCards"
     );
-
 
   if (!container) {
 
@@ -1326,7 +1234,8 @@ function renderInventory() {
     {
       name: "🪪 بطاقة الوصول",
 
-      owned: state.hasKey,
+      owned:
+        state.hasKey,
 
       description:
         "بطاقة تحمل الرقم 17."
@@ -1335,7 +1244,8 @@ function renderInventory() {
     {
       name: "🔋 بطارية",
 
-      owned: state.hasBattery,
+      owned:
+        state.hasBattery,
 
       description:
         "بطارية احتياطية."
@@ -1344,7 +1254,8 @@ function renderInventory() {
     {
       name: "📡 ماسح إشارات",
 
-      owned: state.hasScanner,
+      owned:
+        state.hasScanner,
 
       description:
         "يمكنه التقاط الإشارات الإلكترونية."
@@ -1353,7 +1264,8 @@ function renderInventory() {
     {
       name: "🔦 مصباح",
 
-      owned: state.hasLamp,
+      owned:
+        state.hasLamp,
 
       description:
         "مصباح صغير."
@@ -1370,13 +1282,12 @@ function renderInventory() {
           "div"
         );
 
-
       card.className =
         "card " +
         (
           item.owned
-          ? ""
-          : "locked"
+            ? ""
+            : "locked"
         );
 
 
@@ -1385,11 +1296,10 @@ function renderInventory() {
           "h3"
         );
 
-
       title.textContent =
         item.owned
-        ? item.name
-        : "🔒 غير موجود";
+          ? item.name
+          : "🔒 غير موجود";
 
 
       const description =
@@ -1397,17 +1307,15 @@ function renderInventory() {
           "p"
         );
 
-
       description.textContent =
         item.owned
-        ? item.description
-        : "لم تحصل على هذا العنصر بعد.";
+          ? item.description
+          : "لم تحصل على هذا العنصر بعد.";
 
 
       card.appendChild(
         title
       );
-
 
       card.appendChild(
         description
@@ -1433,34 +1341,43 @@ function renderInventory() {
         "div"
       );
 
-
     progress.className =
       "card";
 
 
     progress.innerHTML =
       "<h3>📋 الحالة</h3>" +
+
       "<p>" +
+
       "قراءة الحاسوب: " +
+
       (
         state.terminalRead
-        ? "✓"
-        : "—"
+          ? "✓"
+          : "—"
       ) +
+
       "<br>" +
+
       "فتح الصندوق: " +
+
       (
         state.crateOpened
-        ? "✓"
-        : "—"
+          ? "✓"
+          : "—"
       ) +
+
       "<br>" +
+
       "إصلاح المولد: " +
+
       (
         state.generatorFixed
-        ? "✓"
-        : "—"
+          ? "✓"
+          : "—"
       ) +
+
       "</p>";
 
 
@@ -1480,7 +1397,6 @@ function finishGame() {
   state.chapter =
     2;
 
-
   save();
 
 
@@ -1493,7 +1409,6 @@ function finishGame() {
     [
 
       {
-
         text: "متابعة",
 
         action: function() {
@@ -1528,7 +1443,6 @@ function pauseGame() {
     [
 
       {
-
         text: "متابعة",
 
         action: function() {
@@ -1540,7 +1454,6 @@ function pauseGame() {
       },
 
       {
-
         text: "القائمة الرئيسية",
 
         action: function() {
@@ -1591,9 +1504,18 @@ function beep(
     }
 
 
+    if (
+      audioContext.state ===
+      "suspended"
+    ) {
+
+      audioContext.resume();
+
+    }
+
+
     const oscillator =
       audioContext.createOscillator();
-
 
     const gain =
       audioContext.createGain();
@@ -1601,7 +1523,6 @@ function beep(
 
     oscillator.frequency.value =
       frequency;
-
 
     oscillator.type =
       "sine";
@@ -1624,14 +1545,12 @@ function beep(
       gain
     );
 
-
     gain.connect(
       audioContext.destination
     );
 
 
     oscillator.start();
-
 
     oscillator.stop(
       audioContext.currentTime +
@@ -1649,153 +1568,114 @@ function beep(
 }
 
 
+/* ================= SAFE EVENT HELPER ================= */
+
+function onClick(
+  id,
+  callback
+) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (!element) {
+
+    console.warn(
+      "ROOM 17: العنصر غير موجود: " +
+      id
+    );
+
+    return;
+
+  }
+
+
+  element.addEventListener(
+    "click",
+    callback
+  );
+
+}
+
+
 /* ================= EVENTS ================= */
 
 
 /* START */
 
-const startButton =
-  document.getElementById(
-    "startBtn"
-  );
-
-
-if (startButton) {
-
-  startButton.addEventListener(
-    "click",
-    newGame
-  );
-
-}
+onClick(
+  "startBtn",
+  newGame
+);
 
 
 /* STORY */
 
-const storyButton =
-  document.getElementById(
-    "storyBtn"
-  );
+onClick(
+  "storyBtn",
+  function() {
 
+    showScreen("story");
 
-if (storyButton) {
-
-  storyButton.addEventListener(
-    "click",
-    function() {
-
-      showScreen("story");
-
-    }
-  );
-
-}
+  }
+);
 
 
 /* SHOP */
 
-const shopButton =
-  document.getElementById(
-    "shopBtn"
-  );
+onClick(
+  "shopBtn",
+  function() {
 
+    openPanel("shop");
 
-if (shopButton) {
-
-  shopButton.addEventListener(
-    "click",
-    function() {
-
-      openPanel("shop");
-
-    }
-  );
-
-}
+  }
+);
 
 
 /* INVENTORY */
 
-const inventoryButton =
-  document.getElementById(
-    "inventoryBtn"
-  );
+onClick(
+  "inventoryBtn",
+  function() {
 
+    openPanel("inventory");
 
-if (inventoryButton) {
-
-  inventoryButton.addEventListener(
-    "click",
-    function() {
-
-      openPanel("inventory");
-
-    }
-  );
-
-}
+  }
+);
 
 
 /* MAP */
 
-const mapButton =
-  document.getElementById(
-    "mapBtn"
-  );
+onClick(
+  "mapBtn",
+  function() {
 
+    showScreen("map");
 
-if (mapButton) {
-
-  mapButton.addEventListener(
-    "click",
-    function() {
-
-      showScreen("map");
-
-    }
-  );
-
-}
+  }
+);
 
 
 /* SETTINGS */
 
-const settingsButton =
-  document.getElementById(
-    "settingsBtn"
-  );
+onClick(
+  "settingsBtn",
+  function() {
 
+    showScreen("settings");
 
-if (settingsButton) {
-
-  settingsButton.addEventListener(
-    "click",
-    function() {
-
-      showScreen("settings");
-
-    }
-  );
-
-}
+  }
+);
 
 
 /* CONTINUE */
 
-const continueButton =
-  document.getElementById(
-    "continueBtn"
-  );
-
-
-if (continueButton) {
-
-  continueButton.addEventListener(
-    "click",
-    continueGame
-  );
-
-}
+onClick(
+  "continueBtn",
+  continueGame
+);
 
 
 /* BACK BUTTONS */
@@ -1816,170 +1696,49 @@ document
 
 /* SOUND */
 
-const soundButton =
-  document.getElementById(
-    "soundBtn"
-  );
+onClick(
+  "soundBtn",
+  function() {
 
+    state.sound =
+      !state.sound;
 
-if (soundButton) {
+    save();
 
-  soundButton.addEventListener(
-    "click",
-    function() {
+    if (state.sound) {
 
-      state.sound =
-        !state.sound;
-
-
-      save();
-
-
-      if (state.sound) {
-
-        beep(
-          500,
-          0.08
-        );
-
-      }
-
-    }
-  );
-
-}
-
-
-/* RESET */
-
-const resetButton =
-  document.getElementById(
-    "resetBtn"
-  );
-
-
-if (resetButton) {
-
-  resetButton.addEventListener(
-    "click",
-    resetGame
-  );
-
-}
-
-
-/* PAUSE */
-
-const pauseButton =
-  document.getElementById(
-    "pauseBtn"
-  );
-
-
-if (pauseButton) {
-
-  pauseButton.addEventListener(
-    "click",
-    pauseGame
-  );
-
-}
-
-
-/* INTERACT */
-
-const interactButton =
-  document.getElementById(
-    "interactBtn"
-  );
-
-
-if (interactButton) {
-
-  interactButton.addEventListener(
-    "click",
-    interact
-  );
-
-}
-
-
-/* LEFT */
-
-const leftButton =
-  document.getElementById(
-    "leftBtn"
-  );
-
-
-/* RIGHT */
-
-const rightButton =
-  document.getElementById(
-    "rightBtn"
-  );
-
-
-/* ================= KEYBOARD ================= */
-
-document.addEventListener(
-  "keydown",
-  function(event) {
-
-    if (
-      event.key === "ArrowLeft" ||
-      event.key === "a" ||
-      event.key === "A"
-    ) {
-
-      move(-1);
-
-    }
-
-
-    if (
-      event.key === "ArrowRight" ||
-      event.key === "d" ||
-      event.key === "D"
-    ) {
-
-      move(1);
-
-    }
-
-
-    if (
-      event.key === " " ||
-      event.key === "Enter"
-    ) {
-
-      const game =
-        document.getElementById(
-          "game"
-        );
-
-
-      if (
-        game &&
-        game.classList.contains("active")
-      ) {
-
-        event.preventDefault();
-
-        interact();
-
-      }
-
-    }
-
-
-    if (event.key === "Escape") {
-
-      closeDialog();
+      beep(
+        500,
+        0.08
+      );
 
     }
 
   }
+);
+
+
+/* RESET */
+
+onClick(
+  "resetBtn",
+  resetGame
+);
+
+
+/* PAUSE */
+
+onClick(
+  "pauseBtn",
+  pauseGame
+);
+
+
+/* INTERACT */
+
+onClick(
+  "interactBtn",
+  interact
 );
 
 
@@ -2044,7 +1803,6 @@ function holdButton(
       interval
     );
 
-
     interval =
       null;
 
@@ -2056,18 +1814,15 @@ function holdButton(
     start
   );
 
-
   button.addEventListener(
     "pointerup",
     stop
   );
 
-
   button.addEventListener(
     "pointercancel",
     stop
   );
-
 
   button.addEventListener(
     "pointerleave",
@@ -2077,7 +1832,18 @@ function holdButton(
 }
 
 
-/* ================= HOLD CONTROLS ================= */
+/* ================= MOVEMENT BUTTONS ================= */
+
+const leftButton =
+  document.getElementById(
+    "leftBtn"
+  );
+
+const rightButton =
+  document.getElementById(
+    "rightBtn"
+  );
+
 
 if (leftButton) {
 
@@ -2097,6 +1863,78 @@ if (rightButton) {
   );
 
 }
+
+
+/* ================= KEYBOARD ================= */
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    const game =
+      document.getElementById(
+        "game"
+      );
+
+
+    if (
+      !game ||
+      !game.classList.contains(
+        "active"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      event.key === "ArrowLeft" ||
+      event.key.toLowerCase() === "a"
+    ) {
+
+      event.preventDefault();
+
+      move(-1);
+
+    }
+
+
+    if (
+      event.key === "ArrowRight" ||
+      event.key.toLowerCase() === "d"
+    ) {
+
+      event.preventDefault();
+
+      move(1);
+
+    }
+
+
+    if (
+      event.key === " " ||
+      event.key === "Enter"
+    ) {
+
+      event.preventDefault();
+
+      interact();
+
+    }
+
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      closeDialog();
+
+    }
+
+  }
+);
 
 
 /* ================= INITIALIZE ================= */
