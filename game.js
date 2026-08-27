@@ -1481,4 +1481,60 @@ function holdButton(button, direction){
   );
 
 
-  button.addEventLis
+"pointerup",
+stop
+);
+
+button.addEventListener(
+"pointerleave",
+stop
+);
+
+button.addEventListener(
+"pointercancel",
+stop
+);
+
+}
+
+holdButton(
+document.getElementById("leftBtn"),
+-1
+);
+
+holdButton(
+document.getElementById("rightBtn"),
+1
+);
+
+/* ================= INITIALIZE ================= */
+
+updateUI();
+
+/* ================= PREVENT ZOOM ================= */
+
+document.addEventListener(
+"touchmove",
+function(event){
+
+if(event.scale !== 1){
+  event.preventDefault();
+}
+
+},
+{passive:false}
+);
+
+/* ================= SAVE ON PAGE HIDE ================= */
+
+document.addEventListener(
+"visibilitychange",
+function(){
+
+if(document.hidden){
+  save();
+}
+
+}
+);
+}
