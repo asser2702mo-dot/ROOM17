@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ROOM 17</title>
+
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#050609;color:#ddd;font-family:Arial,sans-serif}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+#app{width:100vw;height:100vh;position:relative;overflow:hidden;background:#050609}
+.screen{position:absolute;inset:0;display:none}
+.screen.active{display:block}
+
+/* ---------- MAIN MENU ---------- */
+#menu{
+ background:
+ radial-gradient(circle at 50% 35%,#20283a 0,#101520 25%,#07090e 62%,#030407 100%);
+}
+.stars{position:absolute;inset:0;background-image:
+ radial-gradient(circle,#fff 1px,transparent 1px),
+ radial-gradient(circle,#9aa8bd 1px,transparent 1px);
+ background-size:97px 91px,143px 137px;
+ background-position:10px 20px,50px 70px;
+ opacity:.18;animation:drift 18s linear infinite}
+@keyframes drift{to{background-position:107px 120px,0 0}}
+.logo{
+ position:absolute;top:13%;width:100%;text-align:center;
+ letter-spacing:10px;font-size:clamp(35px,8vw,78px);
+ color:#e5e8ee;text-shadow:0 0 30px #7588a0;
+}
+.subtitle{position:absolute;top:26%;width:100%;text-align:center;color:#777;letter-spacing:4px}
+.menuButtons{position:absolute;top:39%;left:50%;transform:translateX(-50%);width:min(430px,80%)}
+.menuButtons button,.panelBtn{
+ width:100%;margin:7px 0;padding:14px;border:1px solid #39404b;
+ background:rgba(10,12,18,.8);border-radius:5px;
+ transition:.15s;color:#c9cdd4;
+}
+.menuButtons button:hover,.panelBtn:hover{background:#202632;border-color:#7c8799}
+.version{position:absolute;bottom:15px;left:20px;color:#444;font-size:11px}
+
+/* ---------- PANELS ---------- */
+.panel{
+ position:absolute;inset:7%;background:rgba(7,9,14,.97);
+ border:1px solid #303743;border-radius:8px;padding:25px;
+ overflow:auto;box-shadow:0 0 60px #000
+}
+.panel h2{text-align:center;margin-top:0;font-weight:normal;letter-spacing:3px}
+.close{position:absolute;top:12px;left:15px;color:#777;font-size:25px}
+.storyText{max-width:750px;margin:30px auto;line-height:2;font-size:17px;color:#b7bbc3}
+.storyText p{margin:22px 0}
+.statbar{display:flex;justify-content:center;gap:30px;color:#aaa;margin:15px}
+
+/* ---------- GAME ---------- */
+#game{background:#030508}
+#world{
+ position:absolute;inset:0;
+ background:
+ linear-gradient(#070b12 0 63%,#11151a 63% 100%);
+ overflow:hidden;
+}
+#roomGlow{
+ position:absolute;inset:0;
+ background:radial-gradient(circle at 50% 45%,rgba(95,110,135,.13),transparent 48%);
+ pointer-events:none
+}
+.wallLine{position:absolute;left:0;right:0;top:63%;height:2px;background:#2d333b}
+.floorGrid{
+ position:absolute;left:0;right:0;bottom:0;height:37%;
+ opacity:.18;
+ background-image:linear-gradient(90deg,#69717b 1px,transparent 1px),
+ linear-gradient(#69717b 1px,transparent 1px);
+ background-size:70px 45px;
+ transform:perspective(350px) rotateX(50deg);
+ transform-origin:bottom;
+}
+
+/* Objects */
+.object{position:absolute;touch-action:manipulation}
+#door{
+ left:5%;bottom:37%;width:14%;height:32%;
+ background:linear-gradient(90deg,#15181d,#272c32,#111318);
+ border:4px solid #363b43;box-shadow:inset 0 0 25px #000;
+}
+#door:after{content:"17";position:absolute;inset:40% 0;text-align:center;color:#555;font-size:20px}
+#terminal{
+ right:8%;top:30%;width:23%;height:21%;
+ background:#071012;border:5px solid #252c31;box-shadow:0 0 30px #000;
+}
+#terminal .terminalText{padding:12px;color:#69a7a4;font:12px monospace}
+#crate{
+ left:42%;bottom:37%;width:13%;height:12%;
+ background:linear-gradient(135deg,#49392c,#211a15);
+ border:3px solid #5a4737;box-shadow:0 10px 20px #000;
+}
+#crate:after{content:"17";position:absolute;inset:35% 0;text-align:center;color:#806b58}
+#generator{
+ right:40%;bottom:37%;width:11%;height:18%;
+ background:#252a2d;border:3px solid #40474c;
+}
+#generator:after{content:"⚡";position:absolute;inset:35% 0;text-align:center;color:#777}
+#lamp{position:absolute;top:14%;left:50%;width:10px;height:20px;background:#555}
+#lamp:after{
+ content:"";position:absolute;width:110px;height:110px;left:-50px;top:10px;
+ border-radius:50%;background:rgba(180,185,150,.06);box-shadow:0 0 45px rgba(180,185,150,.12)
+}
+
+/* player */
+#player{
+ position:absolute;left:34%;bottom:37%;width:28px;height:58px;
+ background:#b8bcc2;border-radius:6px 6px 3px 3px;
+ box-shadow:0 5px 12px #000;z-index:10;
+ transition:left .12s linear;
+}
+#player:before{
+ content:"";position:absolute;left:4px;top:-17px;width:20px;height:20px;
+ background:#aeb3ba;border-radius:50%
+}
+#player:after{
+ content:"";position:absolute;left:5px;top:5px;width:18px;height:14px;
+ background:#263442;border-radius:3px
+}
+
+#hud{
+ position:absolute;top:0;left:0;right:0;height:58px;
+ background:linear-gradient(#05070b,transparent);
+ display:flex;align-items:center;justify-content:space-between;padding:0 14px;z-index:20
+}
+.hudItem{font-size:13px;color:#aaa}.hudItem b{color:#ddd}
+#pauseBtn{border:1px solid #333;padding:6px 11px;border-radius:4px;color:#aaa}
+
+/* controls */
+#controls{position:absolute;bottom:18px;left:18px;right:18px;z-index:30;display:flex;justify-content:space-between;pointer-events:none}
+.controlGroup{display:flex;gap:8px;pointer-events:auto}
+.ctrl{
+ width:55px;height:48px;border:1px solid #3d4249;background:rgba(10,12,16,.8);
+ border-radius:7px;color:#aaa;font-size:20px
+}
+.ctrl:active{background:#333}
+
+/* interaction */
+#interactBtn{
+ position:absolute;bottom:80px;right:25px;z-index:31;
+ padding:13px 22px;border:1px solid #59616d;background:rgba(12,15,20,.9);border-radius:6px
+}
+
+/* ---------- DIALOG ---------- */
+#dialogOverlay{
+ position:absolute;inset:0;background:rgba(0,0,0,.58);z-index:50;display:none
+}
+#dialogBox{
+ position:absolute;bottom:5%;left:5%;right:5%;background:#090c11;
+ border:1px solid #414852;border-radius:8px;padding:18px
+}
+#speaker{color:#8294aa;margin-bottom:10px;letter-spacing:2px}
+#dialogText{font-size:17px;line-height:1.8;min-height:55px}
+.dialogChoices{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.dialogChoices button{
+ flex:1;padding:10px;border:1px solid #383f48;border-radius:5px;background:#14181e
+}
+
+/* ---------- SHOP / INVENTORY ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;max-width:850px;margin:25px auto}
+.card{border:1px solid #343b44;background:#10141a;padding:18px;border-radius:7px}
+.card h3{margin:0 0 8px}.card p{color:#888;font-size:13px;line-height:1.6}
+.card button{width:100%;padding:9px;border:1px solid #414954;border-radius:4px}
+.locked{opacity:.45}
+
+/* ---------- TOAST ---------- */
+#toast{
+ position:absolute;top:70px;left:50%;transform:translateX(-50%);
+ background:#11151b;border:1px solid #414953;padding:11px 18px;border-radius:5px;
+ z-index:100;opacity:0;pointer-events:none;transition:.3s;white-space:nowrap
+}
+#toast.show{opacity:1}
+
+/* ---------- MAP ---------- */
+.map{max-width:650px;margin:30px auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.mapRoom{height:80px;border:1px solid #3a414a;background:#11151b;display:flex;align-items:center;justify-content:center;text-align:center;color:#777;border-radius:5px}
+.mapRoom.open{color:#bbb;border-color:#596474}.mapRoom.current{border-color:#9ba8b8;box-shadow:0 0 15px #39424f}
+
+/* ---------- MOBILE ---------- */
+@media(max-width:600px){
+ .panel{inset:3%;padding:18px}
+ .logo{top:12%;font-size:35px;letter-spacing:6px}
+ .subtitle{top:22%;font-size:10px}
+ .menuButtons{top:34%}
+ .storyText{font-size:14px}
+ #terminal{width:29%;height:24%}
+ #door{width:17%}
+ #crate{width:17%}
+ #generator{width:15%}
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+<!-- MAIN MENU -->
+<section id="menu" class="screen active">
+ <div class="stars"></div>
+ <div class="logo">ROOM 17</div>
+ <div class="subtitle">THE STATION THAT SHOULD NOT EXIST</div>
+
+ <div class="menuButtons">
+  <button onclick="newGame()">▶ ابدأ اللعبة</button>
+  <button onclick="openPanel('story')">📖 القصة</button>
+  <button onclick="openPanel('shop')">🛒 المتجر</button>
+  <button onclick="openPanel('inventory')">🎒 المخزون</button>
+  <button onclick="openPanel('map')">🗺️ الخريطة</button>
+  <button onclick="openPanel('settings')">⚙️ الإعدادات</button>
+  <button onclick="continueGame()">↩ متابعة</button>
+ </div>
+ <div class="version">ROOM 17 • v1.0</div>
+</section>
+
+<!-- STORY -->
+<section id="story" class="screen">
+ <div class="panel">
+  <button class="close" onclick="backMenu()">×</button>
+  <h2>القصة</h2>
+  <div class="storyText">
+   <p>عام 2187.</p>
+   <p>وصلت إلى الأرض إشارة استغاثة من محطة أبحاث مهجورة تدور حول كوكب لم يظهر في أي سجل فلكي.</p>
+   <p>المحطة فقدت الاتصال منذ <b>19 يومًا</b>.</p>
+   <p>لم يكن هناك طاقم إنقاذ متاح، لذلك أُرسلت أنت وحدك.</p>
+   <p>عندما دخلت المحطة، وجدت الكهرباء تعمل.</p>
+   <p>وجدت الطعام طازجًا.</p>
+   <p>ووجدت على إحدى الشاشات رسالة واحدة:</p>
+   <p style="text-align:center;color:#819b9a">"لا توقظ الغرفة 17."</p>
+   <p>المشكلة الوحيدة...</p>
+   <p><b>أنت استيقظت داخلها.</b></p>
+  </div>
+ </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop" class="screen">
+ <div class="panel">
+  <button class="close" onclick="backMenu()">×</button>
+  <h2>🛒 المتجر</h2>
+  <div class="statbar">الرصيد: 🪙 <b id="shopCoins">0</b></div>
+  <div class="cards" id="shopCards"></div>
+ </div>
+</section>
+
+<!-- INVENTORY -->
+<section id="inventory" class="screen">
+ <div class="panel">
+  <button class="close" onclick="backMenu()">×</button>
+  <h2>🎒 المخزون</h2>
+  <div class="cards" id="inventoryCards"></div>
+ </div>
+</section>
+
+<!-- MAP -->
+<section id="map" class="screen">
+ <div class="panel">
+  <button class="close" onclick="backMenu()">×</button>
+  <h2>🗺️ المحطة</h2>
+  <div class="map">
+   <div></div><div class="mapRoom open current">الغرفة 17</div><div></div>
+   <div class="mapRoom open">الممر الرئيسي</div>
+   <div class="mapRoom locked">المختبر<br>🔒</div>
+   <div class="mapRoom locked">غرفة الطاقة<br>🔒</div>
+   <div class="mapRoom locked">المستودع<br>🔒</div>
+   <div class="mapRoom locked">المراقبة<br>🔒</div>
+   <div class="mapRoom locked">المستوى السفلي<br>🔒</div>
+  </div>
+ </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="screen">
+ <div class="panel">
+  <button class="close" onclick="backMenu()">×</button>
+  <h2>⚙️ الإعدادات</h2>
+  <button class="panelBtn" onclick="toggleSound()">🔊 الصوت: <span id="soundState">تشغيل</span></button>
+  <button class="panelBtn" onclick="resetGame()">🗑️ حذف الحفظ</button>
+  <button class="panelBtn" onclick="backMenu()">رجوع</button>
+ </div>
+</section>
+
+<!-- GAME -->
+<section id="game" class="screen">
+ <div id="world">
+  <div class="floorGrid"></div>
+  <div class="wallLine"></div>
+  <div id="roomGlow"></div>
+
+  <div id="lamp"></div>
+
+  <div id="door" class="object"></div>
+  <div id="terminal" class="object">
+   <div class="terminalText" id="terminalText">
+    SYSTEM 17<br><br>
+    POWER: 71%<br>
+    DOOR: LOCKED<br><br>
+    USER: UNKNOWN
+   </div>
+  </div>
+  <div id="crate" class="object"></div>
+  <div id="generator" class="object"></div>
+
+  <div id="player"></div>
+
+  <div id="hud">
+   <div class="hudItem">🪙 <b id="coins">0</b></div>
+   <div class="hudItem">📋 <b id="quest">اكتشف الغرفة</b></div>
+   <button id="pauseBtn" onclick="backMenu()">☰</button>
+  </div>
+
+  <button id="interactBtn" onclick="interact()">تفاعل</button>
+
+  <div id="controls">
+   <div class="controlGroup">
+    <button class="ctrl" onclick="move(-1)">◀</button>
+    <button class="ctrl" onclick="move(1)">▶</button>
+   </div>
+  </div>
+ </div>
+
+ <!-- DIALOG -->
+ <div id="dialogOverlay">
+  <div id="dialogBox">
+   <div id="speaker"></div>
+   <div id="dialogText"></div>
+   <div class="dialogChoices" id="dialogChoices"></div>
+  </div>
+ </div>
+</section>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   ROOM 17
+   Everything is contained in this single HTML file.
+========================================================= */
+
+const defaultState={
+ coins:150,
+ playerX:34,
+ hasKey:false,
+ hasBattery:false,
+ hasScanner:false,
+ terminalRead:false,
+ crateOpened:false,
+ generatorFixed:false,
+ doorOpened:false,
+ chapter:1,
+ sound:true
+};
+
+let state=JSON.parse(localStorage.getItem("room17save")||"null")||{...defaultState};
+
+function save(){
+ localStorage.setItem("room17save",JSON.stringify(state));
+ updateUI();
+}
+
+function showScreen(id){
+ document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+}
+
+function backMenu(){
+ showScreen("menu");
+}
+
+function openPanel(id){
+ if(id==="shop") renderShop();
+ if(id==="inventory") renderInventory();
+ showScreen(id);
+}
+
+function newGame(){
+ state={...defaultState};
+ save();
+ showScreen("game");
+ showDialog(
+  "النظام",
+  "تم تشغيل بروتوكول الاستيقاظ. لا توجد بيانات عن الطاقم. مصدر الإشارة: الغرفة 17.",
+  [{text:"ابدأ التحقيق",action:()=>closeDialog()}]
+ );
+}
+
+function continueGame(){
+ showScreen("game");
+}
+
+function resetGame(){
+ if(confirm("هل تريد حذف تقدم اللعبة بالكامل؟")){
+  localStorage.removeItem("room17save");
+  state={...defaultState};
+  updateUI();
+  toast("تم حذف الحفظ");
+ }
+}
+
+/* ---------- UI ---------- */
+
+function updateUI(){
+ document.getElementById("coins").textContent=state.coins;
+ document.getElementById("shopCoins").textContent=state.coins;
+ document.getElementById("player").style.left=state.playerX+"%";
+
+ let q="اكتشف الغرفة";
+ if(!state.terminalRead) q="افحص الحاسوب";
+ else if(!state.crateOpened) q="ابحث في الصندوق";
+ else if(!state.hasKey) q="اكتشف طريقة فتح الباب";
+ else if(!state.generatorFixed) q="أصلح مولد الطاقة";
+ else q="اخرج من الغرفة 17";
+
+ document.getElementById("quest").textContent=q;
+
+ if(state.terminalRead){
+  document.getElementById("terminalText").innerHTML=
+   "SYSTEM 17<br><br>"+
+   "POWER: "+(state.generatorFixed?"100":"71")+"%<br>"+
+   "DOOR: "+(state.doorOpened?"OPEN":"LOCKED")+"<br><br>"+
+   (state.generatorFixed?"SIGNAL: DETECTED":"USER: UNKNOWN");
+ }
+}
+
+function toast(text){
+ const t=document.getElementById("toast");
+ t.textContent=text;
+ t.classList.add("show");
+ clearTimeout(window.toastTimer);
+ window.toastTimer=setTimeout(()=>t.classList.remove("show"),2400);
+}
+
+/* ---------- MOVEMENT ---------- */
+
+function move(dir){
+ if(!document.getElementById("game").classList.contains("active"))return;
+
+ state.playerX+=dir*4;
+ state.playerX=Math.max(2,Math.min(88,state.playerX));
+
+ document.getElementById("player").style.left=state.playerX+"%";
+
+ if(state.sound) beep(150+Math.random()*80,.04);
+}
+
+/* keyboard support */
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft")move(-1);
+ if(e.key==="ArrowRight")move(1);
+ if(e.key==="e"||e.key==="Enter")interact();
+});
+
+/* ---------- INTERACTION ---------- */
+
+function interact(){
+
+ let x=state.playerX;
+
+ /* Door */
+ if(x<25){
+  if(state.doorOpened){
+   finishGame();
+   return;
+  }
+
+  if(!state.hasKey){
+   showDialog(
+    "الباب",
+    "الباب محكم الإغلاق. لا توجد لوحة أرقام... فقط منفذ صغير أسفل المقبض.",
+    [{text:"الابتعاد",action:closeDialog}]
+   );
+   return;
+  }
+
+  if(!state.generatorFixed){
+   showDialog(
+    "الباب",
+    "المفتاح موجود، لكن نظام الأمان بلا طاقة كافية.",
+    [{text:"حسنًا",action:closeDialog}]
+   );
+   return;
+  }
+
+  state.doorOpened=true;
+  state.chapter=2;
+  save();
+
+  showDialog(
+   "الباب",
+   "سمعت صوت قفل ميكانيكي قديم يتحرك خلف الباب.",
+   [{text:"فتح الباب",action:()=>{
+     closeDialog();
+     toast("تم فتح الممر الرئيسي");
+     flash();
+   }}]
+  );
+  return;
+ }
+
+ /* Terminal */
+ if(x>=25 && x<48){
+  if(!state.terminalRead){
+   state.terminalRead=true;
+   save();
+
+   showDialog(
+    "النظام",
+    "مرحبًا، أيها المستخدم.",
+    [
+     {text:"من أنت؟",action:()=>{
+       showDialog(
+        "النظام",
+        "أنا النظام المسؤول عن مراقبة المحطة.",
+        [
+         {text:"أين الطاقم؟",action:()=>{
+           showDialog(
+            "النظام",
+            "لا توجد بيانات عن طاقم في هذه المحطة.",
+            [
+             {text:"لكن المحطة كانت مأهولة.",action:()=>{
+               showDialog(
+                "النظام",
+                "هذا صحيح.",
+                [{text:"...",action:closeDialog}]
+               );
+             }}
+            ]
+           );
+         }}
+        ]
+       );
+     }},
+     {text:"إغلاق",action:closeDialog}
+    ]
+   );
+  }else{
+   showDialog(
+    "النظام",
+    "هناك ملف جديد لم يكن موجودًا منذ لحظات: ROOM_17_WAKEUP.LOG",
+    [{text:"إغلاق",action:closeDialog}]
+   );
+  }
+  return;
+ }
+
+ /* Crate */
+ if(x>=48 && x<68){
+  if(!state.crateOpened){
+   state.crateOpened=true;
+   state.coins+=50;
+   save();
+
+   showDialog(
+    "الصندوق",
+    "وجدت بطارية احتياطية و50 رصيدًا.",
+    [{text:"أخذ العناصر",action:()=>{
+      state.hasBattery=true;
+      save();
+      closeDialog();
+      toast("+50 🪙");
+    }}]
+   );
+  }else{
+   toast("الصندوق فارغ.");
+  }
+  return;
+ }
+
+ /* Generator */
+ if(x>=68){
+  if(!state.generatorFixed){
+   if(!state.hasBattery){
+    showDialog(
+     "مولد الطاقة",
+     "المولد يحتاج إلى بطارية احتياطية.",
+     [{text:"حسنًا",action:closeDialog}]
+    );
+    return;
+   }
+
+   state.generatorFixed=true;
+   state.hasBattery=false;
+   state.coins+=75;
+   save();
+
+   showDialog(
+    "مولد الطاقة",
+    "تم تركيب البطارية. عادت الطاقة إلى 100%.",
+    [{text:"متابعة",action:()=>{
+      closeDialog();
+      toast("+75 🪙");
+      flash();
+    }}]
+   );
+  }else{
+   toast("المولد يعمل.");
+  }
+  return;
+ }
+
+ toast("لا يوجد شيء مهم هنا.");
+}
+
+/* ---------- DIALOG SYSTEM ---------- */
+
+function showDialog(speaker,text,choices=[]){
+ document.getElementById("speaker").textContent=speaker;
+ document.getElementById("dialogText").textContent=text;
+
+ const box=document.getElementById("dialogChoices");
+ box.innerHTML="";
+
+ choices.forEach(c=>{
+  const b=document.createElement("button");
+  b.textContent=c.text;
+  b.onclick=c.action;
+  box.appendChild(b);
+ });
+
+ document.getElementById("dialogOverlay").style.display="block";
+}
+
+function closeDialog(){
+ document.getElementById("dialogOverlay").style.display="none";
+}
+
+function finishGame(){
+ state.coins+=200;
+ save();
+
+ showDialog(
+  "الممر الرئيسي",
+  "خرجت من الغرفة 17...",
+  [
+   {text:"متابعة",action:()=>{
+     closeDialog();
+     showDialog(
+      "النظام",
+      "تم تحديث الخريطة. لكن هناك مشكلة.",
+      [
+       {text:"ما المشكلة؟",action:()=>{
+        showDialog(
+         "النظام",
+         "الممر الذي أمامك... لم يكن موجودًا في مخطط المحطة.",
+         [{text:"ابدأ الفصل الثاني",action:()=>{
+          closeDialog();
+          toast("الفصل الثاني متاح");
+         }}]
+        );
+       }}
+      ]
+     );
+   }}
+  ]
+ );
+}
+
+/* ---------- SHOP ---------- */
+
+const items=[
+ {id:"scanner",name:"📡 ماسح إشارات",price:120,desc:"يكشف بعض الأشياء المخفية في المحطة."},
+ {id:"battery",name:"🔋 بطارية احتياطية",price:80,desc:"بطارية إضافية يمكن استخدامها في الأنظمة."},
+ {id:"key",name:"🗝️ مفتاح صيانة",price:300,desc:"يفتح بعض الأقفال الميكانيكية."},
+ {id:"lamp",name:"🔦 مصباح قوي",price:180,desc:"يزيد وضوح المناطق المظلمة."}
+];
+
+function hasItem(id){
+ return state["has"+id.charAt(0).toUpperCase()+id.slice(1)];
+}
+
+function buy(item){
+ const key="has"+item.id.charAt(0).toUpperCase()+item.id.slice(1);
+
+ if(state[key]){
+  toast("لديك هذا العنصر بالفعل.");
+  return;
+ }
+
+ if(state.coins<item.price){
+  toast("الرصيد غير كافٍ.");
+  return;
+ }
+
+ state.coins-=item.price;
+ state[key]=true;
+ save();
+ renderShop();
+ toast("تم شراء "+item.name);
+}
+
+function renderShop(){
+ const box=document.getElementById("shopCards");
+ box.innerHTML="";
+
+ items.forEach(item=>{
+  const key="has"+item.id.charAt(0).toUpperCase()+item.id.slice(1);
+  const owned=state[key];
+
+  const div=document.createElement("div");
+  div.className="card"+(owned?" locked":"");
+  div.innerHTML=`
+   <h3>${item.name}</h3>
+   <p>${item.desc}</p>
+   <p>السعر: 🪙 ${item.price}</p>
+   <button ${owned?"disabled":""} onclick='buy(${JSON.stringify(item)})'>
+    ${owned?"تم الشراء":"شراء"}
+   </button>
+  `;
+  box.appendChild(div);
+ });
+}
+
+/* -------
